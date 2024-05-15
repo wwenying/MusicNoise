@@ -51,19 +51,6 @@ export default class NewClass extends cc.Component {
   audioCtx: AudioContext = null;
   init = async () => {
     if (cc.sys.isBrowser) {
-      await loadRemoteUrl(
-        "//y.qq.com/component/m/qmplayer/qmplayer.full.js?max_age=604800"
-      );
-
-      this.player = new QMPlayer({ target: "web", loop: false });
-      this.player.on("play", (e) => {
-        this.playState = PlayStateEnum.PLAYING;
-        this.currentTime = Date.now();
-      });
-      this.player.on("pause", () => {
-        this.playState = PlayStateEnum.PAUSE;
-        this.unscheduleAllCallbacks();
-      });
     }
     this.bindEvent();
   };
@@ -89,24 +76,33 @@ export default class NewClass extends cc.Component {
       return;
     }
     // 节拍处理方法
-    if (deltaTime > 0.025) {
-      this.currentTime = now;
-      this.playTime += deltaTime;
-      if (
-        this.playTime > beatTime[this.beatIndex + 1] ||
-        beatTime[this.beatIndex + 1] - this.playTime < 0.02
-      ) {
-        if (beats[this.beatIndex + 1] === 1) {
-          this.rate = 0.7;
-        } else {
-          this.rate = 0.2;
-        }
-        this.beatIndex++;
-      }
-      this.increaseValue =
-        this.increaseValue + (deltaTime * 0.5 + this.rate * 0.4);
-      this.sprite.getMaterial(0).setProperty("time", this.increaseValue);
-    }
+    // if (deltaTime > 0.025) {
+    //   this.currentTime = now;
+    //   this.playTime += deltaTime;
+    //   if (
+    //     this.playTime > beatTime[this.beatIndex + 1] ||
+    //     beatTime[this.beatIndex + 1] - this.playTime < 0.02
+    //   ) {
+    //     if (beats[this.beatIndex + 1] === 1) {
+    //       this.rate = 0.7;
+    //     } else {
+    //       this.rate = 0.2;
+    //     }
+    //     this.beatIndex++;
+    //   }
+
+    //   this.increaseValue =
+    //     this.increaseValue + (deltaTime * 0.5 + this.rate * 0.4);
+    //   console.log(
+    //     "当前播放时间：",
+    //     this.playTime,
+    //     "当前节拍:",
+    //     beats[this.beatIndex + 1] === 1 ? "重拍" : "轻拍",
+    //     "shader入参:",
+    //     this.increaseValue
+    //   );
+    //   this.sprite.getMaterial(0).setProperty("time", this.increaseValue);
+    // }
     // 歌曲震感处理方法
     if (deltaTime > 0.025) {
       this.currentTime = now;
@@ -117,7 +113,14 @@ export default class NewClass extends cc.Component {
       }
       this.increaseValue =
         this.increaseValue + (deltaTime * 0.5 + this.rate * 0.4);
-
+      console.log(
+        "当前播放时间：",
+        this.playTime,
+        "当前震感:",
+        this.rate,
+        "shader入参:",
+        this.increaseValue
+      );
       this.sprite.getMaterial(0).setProperty("time", this.increaseValue);
     }
   };
