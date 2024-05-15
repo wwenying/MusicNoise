@@ -1,0 +1,17 @@
+{
+  "__type__": "cc.Material",
+  "_name": "noise",
+  "_objFlags": 0,
+  "_native": "",
+  "_effectAsset": {
+    "__uuid__": "680b43e3-3436-4553-95b5-04e6cc2d44c0"
+  },
+  "_techniqueIndex": 0,
+  "_techniqueData": {
+    "0": {
+      "defines": {
+        "USE_TEXTURE": true
+      }
+    }
+  }
+}
