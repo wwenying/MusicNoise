@@ -22,15 +22,12 @@ export default class NewClass extends cc.Component {
   @property(cc.Sprite)
   sprite: cc.Sprite = null;
 
-  @property(cc.Label)
-  lyrics: cc.Label = null;
+  @property(cc.AudioSource)
+  audio: cc.AudioSource = null;
 
   // 歌曲播放信息
-  songMid = "0026n3hF3bJsj6";
-  //   songMid = "000X26xH2d2TiD"; 0026n3hF3bJsj6
   playState = PlayStateEnum.PAUSE;
   playTime = 0;
-  player = null;
   bpm = 96.189;
 
   // 节拍相关信息
@@ -40,9 +37,6 @@ export default class NewClass extends cc.Component {
   private currentTime = 0;
 
   onLoad() {}
-
-  time = 0;
-  lyricTime = 0;
 
   protected start(): void {
     this.init();
@@ -61,16 +55,18 @@ export default class NewClass extends cc.Component {
 
   handlePlay = async () => {
     if (this.playState === PlayStateEnum.PAUSE) {
-      this.player.play([this.songMid]);
+      this.audio.play();
+      this.currentTime = Date.now();
+      this.playState = PlayStateEnum.PLAYING;
     } else if (this.playState === PlayStateEnum.PLAYING) {
-      this.player.pause();
+      this.audio.pause();
+      this.playState = PlayStateEnum.PAUSE;
     }
   };
   private rate = 0.0;
 
-  update = (dt) => {
+  update = () => {
     const now = Date.now();
-    this.time += dt;
     const deltaTime = (now - this.currentTime) / 1000;
     if (this.playState !== PlayStateEnum.PLAYING || !this.currentTime) {
       return;
